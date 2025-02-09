@@ -2,6 +2,7 @@ package com.example.book_library.controller;
 
 import com.example.book_library.entity.Book;
 import com.example.book_library.service.BookService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +38,9 @@ public class BookController {
     }
 
     @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return bookService.saveBook(book);
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        Book createdBook = bookService.saveBook(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
     }
 
 }

@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    image: openjdk:21-jdk
+    working_dir: /app
+    volumes:
+      - ./target/book-library-0.0.1-SNAPSHOT.jar:/app/book-library.jar
+    ports:
+      - "8080:8080"
+    networks:
+      - book-library-network
+    entrypoint: ["java", "-jar", "book-library.jar"]
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/book-libraryDb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=book-libraryDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - book-library-network
+    ports:
+      - "5432:5432"
+
+networks:
+  book-library-network:
+    driver: bridge
